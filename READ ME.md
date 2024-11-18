@@ -26,15 +26,19 @@ Instale as bibliotecas necessárias usando o comando para instalação de depend
 
 ### **Clonando o Repositório**
 
-Clone o projeto do GitHub para sua máquina local e navegue até a pasta do repositório.
+Clone o projeto do GitHub para sua máquina local e navegue até a pasta do repositório:
+
+```bash
 git clone https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
 cd SEU-REPOSITORIO
-
+```
 
 ### **Como Executar**
 
 Certifique-se de que o arquivo com os dados de consumo de energia elétrica esteja na mesma pasta que o script principal do aplicativo. Em seguida, execute o script principal com o seguinte comando:
+```
 python app.py
+```
 Em seguida abra o navegador no endereço fornecido para acessar o aplicativo.
 
 ---
