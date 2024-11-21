@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 
+#carrega os dados e trata colunas principais
 df = pd.read_csv('br_mme_consumo_energia_eletrica_uf (1).csv')
 df['consumo'] = pd.to_numeric(df['consumo'], errors='coerce')
 df['numero_consumidores'] = pd.to_numeric(df['numero_consumidores'], errors='coerce')
@@ -17,6 +18,7 @@ df['ano'] = pd.to_numeric(df['ano'], errors='coerce')
 
 app = dash.Dash(__name__)
 
+#estrutura da interface com dropdown, botão e gráfico
 app.layout = html.Div(
     className='container',
     children=[
@@ -47,7 +49,7 @@ app.layout = html.Div(
     
 )
 
-
+#atualiza o gráfico com dados ou previsões
 @app.callback(
     Output('grafico', 'figure'),
     [Input('uf-dropdown', 'value'),
@@ -61,11 +63,13 @@ def atualizar_grafico(uf_selecionada, n_clicks):
                  y="consumo",
                  title=f"Consumo Total de Energia em {uf_selecionada} por Ano",
                  labels={"consumo": "Consumo de Energia (MWh)", "ano": "Ano"})
-
+    
+  #adiciona previsões
     if n_clicks % 2 > 0:
         X = df_agrupado['ano'].values.reshape(-1, 1)
         y = df_agrupado['consumo'].values
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        #treina o modelo Lasso e calcula métricas
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) 
 
         modelo = Lasso(alpha=0.1)
         modelo.fit(X_train, y_train)
@@ -76,7 +80,7 @@ def atualizar_grafico(uf_selecionada, n_clicks):
         mse = mean_squared_error(y_test, previsoes)
         rmse = np.sqrt(mse)
         r2 = r2_score(y_test, previsoes)
-
+        #gera previsões futuras para os próximos 5 anos
         anos_futuros = np.arange(df_agrupado['ano'].max() + 1, df_agrupado['ano'].max() + 6).reshape(-1, 1)
         previsao_futura = modelo.predict(anos_futuros)
 
